@@ -128,11 +128,11 @@ visitors %>%
 _How many attractions had between 50,000 and 100,000 visitors in 2022?_
 
 ```{r Ex_f}
-#visitors %>% 
-#  filter(
-#    ______,
-#    ______ ) %>%
-#  count()
+visitors %>% 
+  filter(
+    n_2022 >=50000,
+    n_2022 <=100000 ) %>%
+  count()
 ```
 
 ### Exercise g.
@@ -140,9 +140,9 @@ _How many attractions had between 50,000 and 100,000 visitors in 2022?_
 _How many regions have more than 50 tourist attraction in the data set? (Hint: You will need to tabulate the data before filtering.)_
 
 ```{r Ex_g}
-#visitors %>% 
-#  _____(region) %>%
-#  filter(______)
+visitors %>% 
+  count(region) %>%
+  filter(n>50)
 ```
 
 
@@ -167,11 +167,11 @@ visitors %>%
 _Perform the same calculation for the 2021 admissions data._
 
 ```{r Ex_h}
-#visitors %>% 
-#  ______(
-#    __________,
-#    __________
-#  )
+visitors %>% 
+  summarise(
+    mean_2021 = mean(n_2021),
+    med_2021 = median(n_2021)
+  )
 ```
 
 All values in the output are `NA`!
@@ -181,7 +181,7 @@ All values in the output are `NA`!
 _What does `NA` stand for and why are you getting this as your answer to the previous question._
 
 **Write your answer here**
-
+Na means that some of the values are missing and since the calculations cant work unless all values are in the same numerical data type calculation isnt working
 
 
 
@@ -190,8 +190,13 @@ _What does `NA` stand for and why are you getting this as your answer to the pre
 _Look at the help pages for the `mean()` and `median()` commands to see what the input argument `na.rm` does. Edit your code from exercise h so that it computes the summary statistics where data is available._
 
 **Write your answer here**
+na.rm excludes the Na data from the result
 
-
+visitors %>% 
+  summarise(
+    mean_2021 = mean(n_2021, na.rm = TRUE),
+    med_2021 = median(n_2021, na.rm = TRUE)
+  )
 
 
 ## Question 7
@@ -213,7 +218,7 @@ _Observe in question 6 that the mean statistics across all settings are much lar
 
 **Write your answer here**
 
-
+There are a greater number of lower values in comparrison to higher values and the higher values are significantly larger
 
 
 ## Question 8
@@ -244,8 +249,18 @@ _How many tourist attractions are there in each of the 4 nations? From this, dis
 
 
 ```{r Ex_l}
-#________ %>%
-#  ______(_______)
+visitors_with_nations <- visitors %>%
+  mutate(
+    nation = case_when(
+      region == "Northern Ireland" ~ "Northern Ireland",
+      region == "Scotland" ~ "Scotland",
+      region == "Wales" ~ "Wales",
+      TRUE ~ "England"
+    )
+  )
+
+visitors_with_nations %>%
+  count(nation)
 ```
 
 
